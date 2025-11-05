@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from numpy import log10, abs as np_abs, nanmax as np_max, NaN, zeros_like
+from numpy import log10, abs as np_abs, nanmax as np_max, nan, zeros_like
 import matplotlib.pyplot as plt
 
 from SciDataTool.Functions.Plot.init_fig import init_fig
@@ -157,7 +157,7 @@ def plot_4D(
         else:
             z_min = z_max / 1e4
 
-    Zdata[Zdata < z_min] = NaN
+    Zdata[Zdata < z_min] = nan
 
     if is_same_size:
         Sdata = zeros_like(Zdata)
