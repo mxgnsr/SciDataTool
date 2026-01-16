@@ -9,4 +9,6 @@ _Internal/
 .ipynb_checkpoints/
 SciDataTool.egg-info
 dist
-.venv/
+.*venv*/
+.tox/
+.vscode/
