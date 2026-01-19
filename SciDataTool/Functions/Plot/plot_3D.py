@@ -260,7 +260,7 @@ def plot_3D(
         #     # Enabling transposition
         im.set_data(Xdata, Ydata, Zdata)
         im.set_clim(z_min, z_max)
-        ax.images.append(im)
+        ax.add_image(im)
         if is_contour:
             # if Zdata.shape[0] == Xdata.size:
             #     ax.contour(Xdata, Ydata, Zdata.T, colors="black", linewidths=0.8)
