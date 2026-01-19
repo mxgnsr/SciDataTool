@@ -1,4 +1,3 @@
-from pandas import NA
 import pytest
 from SciDataTool import (
     DataTime,
