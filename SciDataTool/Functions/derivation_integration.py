@@ -251,7 +251,13 @@ def integrate(values, ax_val, index, Nper, is_aper, is_phys, is_mean=False):
                 # in case of periodicity (respectively anti-periodicity)
                 values_full[-1, ...] = values[0, ...]
             # Integrate along axis
-            values = Nper * np.trapz(values_full, x=ax_full, axis=0)
+            try:
+                values = Nper * np.trapz(values_full, x=ax_full, axis=0)
+            except AttributeError:
+                # trapz was deprecated in numpy 2.0
+                values = Nper * np.trapezoid(values_full, x=ax_full, axis=0)
+            except Exception as e:
+                raise e
             # Readd first dim and swap axes back to origin
             values = np.swapaxes(values[None, ...], 0, index)
 
