@@ -4,7 +4,8 @@ from os import makedirs
 from shutil import rmtree
 from matplotlib import use
 
-use("Qt5Agg")  # Use PyQt5 backend
+# Use Qt5/Qt6 backend depended on whats installed (PyQt5/PySide2 or PyQt6/PySide6)
+use("qtagg")
 TEST_DIR = abspath(dirname(__file__))
 DATA_DIR = join(TEST_DIR, "Data")
 LOG_DIR = join(TEST_DIR, "logtest.txt")
