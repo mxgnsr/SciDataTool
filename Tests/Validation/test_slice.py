@@ -1,6 +1,6 @@
 import pytest
 from SciDataTool import DataLinspace, DataTime, DataPattern
-from numpy import meshgrid, linspace, array, repeat, nan, trapz, pi, cos
+from numpy import meshgrid, linspace, array, repeat, nan, pi, cos
 from numpy.testing import assert_array_almost_equal
 
 
