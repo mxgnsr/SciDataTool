@@ -1,11 +1,33 @@
 import logging
-from os.path import join, abspath, dirname, isdir
+import sys
 from os import makedirs
+from os.path import abspath, dirname, isdir, join
 from shutil import rmtree
-from matplotlib import use
 
-# Use Qt5/Qt6 backend depended on whats installed (PyQt5/PySide2 or PyQt6/PySide6)
-use("qtagg")
+from matplotlib import use
+from packaging.version import Version
+
+# check python version for import of pyside2 or pyside6
+PYTHON_VERSION = Version(sys.version.split(" ")[0])
+if PYTHON_VERSION <= Version("3.9"):
+    try:
+        from PySide2 import QtCore
+
+        # Use Qt5/Qt6 backend depended on whats installed (PyQt5/PySide2 or PyQt6/PySide6)
+        use("qtagg")
+    except ImportError:
+        use("agg")
+elif PYTHON_VERSION > Version("3.9"):
+    try:
+        from PySide6 import QtCore
+
+        # Use Qt5/Qt6 backend depended on whats installed (PyQt5/PySide2 or PyQt6/PySide6)
+        use("qtagg")
+    except ImportError:
+        use("agg")
+else:
+    logging.error("Invalid python version %s", sys.version_info)
+
 TEST_DIR = abspath(dirname(__file__))
 DATA_DIR = join(TEST_DIR, "Data")
 LOG_DIR = join(TEST_DIR, "logtest.txt")
