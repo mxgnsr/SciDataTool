@@ -42,6 +42,16 @@ def test_plot_2D(axis1, axis2, plot_name):
         ("time", r"angle{°}", True, "plot_3D_flat"),
         ("time", r"angle{°}", False, "plot_3D"),
         ("freqs", "wavenumber", True, "plot_3D_freqs_wavenumber_flat"),
+        pytest.param(
+            "freqs",
+            "wavenumber",
+            False,
+            "plot_3D_freqs_wavenumber_stem",
+            marks=pytest.mark.xfail(
+                reason="There is some issue with the axis data configuration in 3D plot "
+                "when using fft and is_2D_view=False"
+            ),
+        ),
     ],
 )
 def test_plot_3D(axis1, axis2, view_2D, plot_name):
