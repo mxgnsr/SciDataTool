@@ -1,6 +1,6 @@
-from h5py import File, Group
-from numpy import bool_, int64, str_, array
 from cloudpickle import loads
+from h5py import File, Group
+from numpy import array, bool_, bytes_, int64
 
 
 def construct_dict_from_group(group):
@@ -37,7 +37,10 @@ def construct_dict_from_group(group):
                     value = bool(value)
                 elif isinstance(value, int64):  # float
                     value = float(value)
-                elif isinstance(value, str_):  # String
+                elif isinstance(value, bytes_):  # String
+                    # np.string_ has been removed in 2.0.0. See
+                    # https://numpy.org/doc/stable/release/2.0.0-notes.html for details.
+                    # its recommended to use np.bytes_ instead.
                     value = value.decode("ISO-8859-2")
 
                 list_.append(value)
@@ -58,7 +61,7 @@ def construct_dict_from_group(group):
                     value = bool(value)
                 elif isinstance(value, int64):  # float
                     value = float(value)
-                elif isinstance(value, str_):  # String
+                elif isinstance(value, bytes_):  # String
                     value = value.decode("ISO-8859-2")
                 dict_[key] = value
         return dict_
