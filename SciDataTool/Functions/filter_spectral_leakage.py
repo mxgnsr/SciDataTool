@@ -52,7 +52,11 @@ def filter_spectral_leakage(
         if freqs_th.size % 2 == 0
         else int((freqs_th.size + 1) / 2)
     )
-    if freqs_th.size == 1 or not np.all(freqs_th[:Nhalf] == -np.flip(freqs_th[Nhalf:])):
+    if (
+        freqs_th.size == 1  # only one frequency
+        or freqs_th.size % 2 == 1  # uneven number of freqs -> cannot be symmetric
+        or not np.all(freqs_th[:Nhalf] == -np.flip(freqs_th[Nhalf:]))
+    ):
         freqs_th = unique_tol(np.concatenate((freqs_th, -freqs_th), axis=0))
 
     if Wmatf.size == 0 or If.size == 0:
@@ -141,7 +145,7 @@ def filter_spectral_leakage(
         # spec_val = np.abs(np.sqrt(np.sum(spectrum[If_ref, :] ** 2, axis=-1)))
         spec_val0 = np.abs(np.sqrt(np.sum(spectrum[If, :] ** 2, axis=-1)))
         # spec_val1 = np.abs(np.sqrt(np.sum(spectrum[If1, :] ** 2, axis=-1)))
-        spec_val_filt = np.abs(np.sqrt(np.sum(spectrum_filt ** 2, axis=-1)))
+        spec_val_filt = np.abs(np.sqrt(np.sum(spectrum_filt**2, axis=-1)))
         plt.figure()
         # plt.plot(freqs[If_ref], spec_val)
         plt.plot(freqs[If], spec_val0)
