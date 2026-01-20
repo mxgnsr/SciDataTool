@@ -1,14 +1,24 @@
-import pytest
-from SciDataTool import DataLinspace, DataTime, Data1D, Norm_affine
-from Tests import save_validation_path
-from SciDataTool.Functions.Plot.plot_2D import plot_2D
-from numpy import meshgrid, pi, linspace, zeros, sin, split, sum
 from os.path import join
+
+import pytest
+from numpy import cos, linspace, meshgrid, pi, sin, zeros
+
+from SciDataTool import Data1D, DataLinspace, DataTime, Norm_affine
+from Tests import save_validation_path
 
 
 @pytest.mark.validation
 # @pytest.mark.DEV
-def test_plot():
+@pytest.mark.parametrize(
+    ("axis1", "axis2", "plot_name"),
+    [
+        ("time", "angle=[0,pi/4,pi/2]", "plot_2D"),
+        ("freqs", "angle=[0,pi/4,pi/2]", "plot_2D_freqs"),
+        ("wavenumber", "", "plot_2D_wavenumber"),
+        ("wavenumber", r"freqs=1{Hz}", "plot_2D_wavenumber_freq"),
+    ],
+)
+def test_plot_2D(axis1, axis2, plot_name):
     """Test plot"""
     Time = DataLinspace(name="time", unit="s", initial=0, final=10, number=1001)
     Angle = DataLinspace(name="angle", unit="rad", initial=0, final=2 * pi, number=2001)
@@ -17,17 +27,44 @@ def test_plot():
     Field = DataTime(name="Example field", symbol="Z", axes=[Time, Angle], values=field)
 
     Field.plot_2D_Data(
-        "time",
-        "angle=[0,pi/4,pi/2]",
+        axis1,
+        axis2,
         is_show_fig=False,
-        save_path=join(save_validation_path, "plot_2D.png"),
+        save_path=join(save_validation_path, f"{plot_name}.png"),
     )
+
+
+@pytest.mark.validation
+# @pytest.mark.DEV
+@pytest.mark.parametrize(
+    ("axis1", "axis2", "view_2D", "plot_name"),
+    [
+        ("time", r"angle{°}", True, "plot_3D_flat"),
+        ("time", r"angle{°}", False, "plot_3D"),
+        ("freqs", "wavenumber", True, "plot_3D_freqs_wavenumber_flat"),
+    ],
+)
+def test_plot_3D(axis1, axis2, view_2D, plot_name):
+    """Test plot"""
+    Time = DataLinspace(name="time", unit="s", initial=0, final=2, number=1001)
+    Angle = DataLinspace(name="angle", unit="rad", initial=0, final=2 * pi, number=2001)
+    angle, time = meshgrid(Angle.get_values(), Time.get_values())
+
+    # wave parameters
+    f = 1
+    omega = 2 * pi * f  # angular frequency (rad/s)
+    k = 1.0  # angular wavenumber (rad⁻¹)
+    phi = 0.0  # phase offset
+
+    field = 3 * sin(omega * time + 1 * angle) + cos(2 * omega * time + 5 * angle)
+    Field = DataTime(name="Example field", symbol="Z", axes=[Time, Angle], values=field)
+
     Field.plot_3D_Data(
-        "time",
-        "angle{°}",
-        is_2D_view=True,
+        axis1,
+        axis2,
+        is_2D_view=view_2D,
         is_show_fig=False,
-        save_path=join(save_validation_path, "plot_3D.png"),
+        save_path=join(save_validation_path, f"{plot_name}.png"),
     )
 
 
@@ -103,6 +140,5 @@ def test_strings():
 
 
 if __name__ == "__main__":
-    test_plot()
     test_normalization()
     test_strings()
