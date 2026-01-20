@@ -8,6 +8,7 @@ env_list = [
     "py39",
     "py38",
     "py37",
+    # "py36", -> not compatible due to scipy 1.6.0
     # "type"
 ]
 
